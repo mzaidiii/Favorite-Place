@@ -1,3 +1,4 @@
+import 'package:favorite_places/Widget/Image_input.dart';
 import 'package:flutter/material.dart';
 
 class NewPlace extends StatefulWidget {
@@ -33,13 +34,17 @@ class _NewPlaceState extends State<NewPlace> {
             onChanged: (value) => placename = value,
           ),
           const SizedBox(
+            height: 4,
+          ),
+          ImageInput(),
+          const SizedBox(
             height: 8,
           ),
           ElevatedButton(
               onPressed: saveback,
               child: Text(
                 'Save Place',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.white),
               ))
         ],
       ),
