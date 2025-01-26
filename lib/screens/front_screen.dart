@@ -12,7 +12,7 @@ class FrontScreen extends ConsumerWidget {
     final placesNotifier = ref.watch(placesProvider.notifier);
 
     void newPlace() async {
-      final response = await Navigator.of(context).push<String>(
+      final response = await Navigator.of(context).push<Map<String, dynamic>>(
         MaterialPageRoute(builder: (ctx) => NewPlace()),
       );
 
@@ -44,11 +44,21 @@ class FrontScreen extends ConsumerWidget {
               itemCount: places.length,
               itemBuilder: (context, index) {
                 final place = places[index];
+
                 return ListTile(
-                  title: Text(place),
+                  leading: place['image'] != null
+                      ? Image.file(
+                          place['image'],
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        )
+                      : Icon(Icons.image),
+                  title: Text(place['name']),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => PlaceDetailScreen(place: place)));
+                        builder: (context) =>
+                            PlaceDetailScreen(place: place['name'])));
                   },
                 );
               },
