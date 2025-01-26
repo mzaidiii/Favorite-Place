@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:favorite_places/Widget/Image_input.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +10,7 @@ class NewPlace extends StatefulWidget {
 
 class _NewPlaceState extends State<NewPlace> {
   final TextEditingController _placeController = TextEditingController();
+  File? _seletctedImage;
 
   var placename = '';
 
@@ -36,7 +39,11 @@ class _NewPlaceState extends State<NewPlace> {
           const SizedBox(
             height: 4,
           ),
-          ImageInput(),
+          ImageInput(
+            onPickedimage: (image) {
+              _seletctedImage = image;
+            },
+          ),
           const SizedBox(
             height: 8,
           ),
