@@ -45,21 +45,27 @@ class FrontScreen extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final place = places[index];
 
-                return ListTile(
-                  leading: place['image'] != null
-                      ? Image.file(
-                          place['image'],
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        )
-                      : Icon(Icons.image),
-                  title: Text(place['name']),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            PlaceDetailScreen(place: place['name'])));
-                  },
+                return Card(
+                  margin: const EdgeInsets.all(8),
+                  clipBehavior: Clip.antiAlias,
+                  child: ListTile(
+                    leading: place['image'] != null
+                        ? Image.file(
+                            place['image'],
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover,
+                          )
+                        : Icon(Icons.image),
+                    title: Text(place['name']),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PlaceDetailScreen(
+                                place: place['name'],
+                                image: place['image'],
+                              )));
+                    },
+                  ),
                 );
               },
             ),
