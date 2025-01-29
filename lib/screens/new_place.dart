@@ -4,6 +4,7 @@ import 'package:favorite_places/Widget/location_input.dart';
 import 'package:favorite_places/models/places.dart';
 import 'package:flutter/material.dart';
 import 'package:favorite_places/Widget/Image_input.dart';
+import 'package:favorite_places/models/database_helper.dart';
 
 class NewPlace extends StatefulWidget {
   @override
@@ -15,15 +16,25 @@ class _NewPlaceState extends State<NewPlace> {
   File? _selectedImage;
   PlaceLocation? selLocation;
 
-  void saveBack() {
+  void saveBack() async {
     final placeName = _placeController.text;
 
-    if (placeName.isEmpty || _selectedImage == null) {
+    if (placeName.isEmpty || _selectedImage == null || selLocation == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please provide both a name and an image!')),
+        SnackBar(
+            content:
+                Text('Please provide both a name, an image, and a location!')),
       );
       return;
     }
+
+    final newPlace = Places(
+      Name: placeName,
+      image: _selectedImage!,
+      location: selLocation!,
+    );
+
+    await DatabaseHelper().insertPlace(newPlace);
 
     Navigator.of(context).pop({
       'name': placeName,
@@ -38,39 +49,41 @@ class _NewPlaceState extends State<NewPlace> {
       appBar: AppBar(
         title: Text('Add Your Place'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _placeController,
-              decoration: InputDecoration(label: Text('Name')),
-              maxLength: 100,
-            ),
-            const SizedBox(height: 16),
-            ImageInput(
-              onPickedimage: (image) {
-                _selectedImage = image;
-              },
-            ),
-            const SizedBox(height: 16),
-            LocationInput(
-              onselectedLocation: (loc) {
-                print(
-                    'Location received: ${loc.address}, ${loc.latitude}, ${loc.longitude}');
-                selLocation = loc;
-              },
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: saveBack,
-              child: Text(
-                'Save Place',
-                style: TextStyle(color: Colors.white),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: _placeController,
+                decoration: InputDecoration(label: Text('Name')),
+                maxLength: 100,
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              ImageInput(
+                onPickedimage: (image) {
+                  _selectedImage = image;
+                },
+              ),
+              const SizedBox(height: 16),
+              LocationInput(
+                onselectedLocation: (loc) {
+                  print(
+                      'Location received: ${loc.address}, ${loc.latitude}, ${loc.longitude}');
+                  selLocation = loc;
+                },
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: saveBack,
+                child: Text(
+                  'Save Place',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
