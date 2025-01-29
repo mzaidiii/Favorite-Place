@@ -4,12 +4,41 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:favorite_places/screens/new_place.dart';
 import 'package:favorite_places/provider/place_name_provider.dart';
+import 'package:favorite_places/models/database_helper.dart';
 
-class FrontScreen extends ConsumerWidget {
+class FrontScreen extends ConsumerStatefulWidget {
+  const FrontScreen({super.key});
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  createState() {
+    return _FrontScreenState();
+  }
+}
+
+class _FrontScreenState extends ConsumerState<FrontScreen> {
+  @override
+  void initState() {
+    super.initState();
+    loadPlaces();
+  }
+
+  void loadPlaces() async {
+    final placesList = await DatabaseHelper().getPlaces();
+    ref.read(placesProvider.notifier).update((state) => placesList
+        .map((place) => {
+              'id': place.id,
+              'name': place.Name,
+              'image': place.image,
+              'location': place.location,
+            })
+        .toList());
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final places = ref.watch(placesProvider);
     final placesNotifier = ref.watch(placesProvider.notifier);
+
+    loadPlaces();
 
     void newPlace() async {
       final response = await Navigator.of(context).push<Map<String, dynamic>>(
