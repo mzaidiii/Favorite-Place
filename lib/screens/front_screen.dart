@@ -57,13 +57,27 @@ class FrontScreen extends ConsumerWidget {
                             fit: BoxFit.cover,
                           )
                         : Icon(Icons.image),
-                    title: Text(place['name']),
+                    title: Text(
+                      place['name'],
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    subtitle: Text(
+                      place['location'] != null
+                          ? place['location'].address
+                          : 'No location available',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: Theme.of(context).colorScheme.onBackground),
+                    ),
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
                           builder: (context) => PlaceDetailScreen(
-                                place: place['name'],
-                                image: place['image'],
-                              )));
+                            place: place['name'],
+                            image: place['image'],
+                            places: place['location'],
+                          ),
+                        ),
+                      );
                     },
                   ),
                 );
