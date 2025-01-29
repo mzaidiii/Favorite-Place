@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:favorite_places/Widget/location_input.dart';
+import 'package:favorite_places/models/places.dart';
 import 'package:flutter/material.dart';
 import 'package:favorite_places/Widget/Image_input.dart';
 
@@ -11,6 +13,7 @@ class NewPlace extends StatefulWidget {
 class _NewPlaceState extends State<NewPlace> {
   final TextEditingController _placeController = TextEditingController();
   File? _selectedImage;
+  PlaceLocation? selLocation;
 
   void saveBack() {
     final placeName = _placeController.text;
@@ -25,6 +28,7 @@ class _NewPlaceState extends State<NewPlace> {
     Navigator.of(context).pop({
       'name': placeName,
       'image': _selectedImage,
+      'location': selLocation,
     });
   }
 
@@ -48,6 +52,14 @@ class _NewPlaceState extends State<NewPlace> {
             ImageInput(
               onPickedimage: (image) {
                 _selectedImage = image;
+              },
+            ),
+            const SizedBox(height: 16),
+            LocationInput(
+              onselectedLocation: (loc) {
+                print(
+                    'Location received: ${loc.address}, ${loc.latitude}, ${loc.longitude}');
+                selLocation = loc;
               },
             ),
             const SizedBox(height: 16),
